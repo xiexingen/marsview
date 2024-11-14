@@ -70,8 +70,8 @@ export default () => {
   const initWasm = async () => {
     try {
       setLoading(true);
-      await loadScript(`${import.meta.env.VITE_CDN_URL}/static/esbuild-wasm%400.20.2/browser.min.js`);
-      await window.esbuild.initialize({ wasmURL: `${import.meta.env.VITE_CDN_URL}/static/esbuild-wasm%400.20.2/esbuild.wasm` });
+      await loadScript(`${import.meta.env.VITE_CDN_URL}/static/esbuild-wasm@0.20.2/browser.min.js`);
+      await window.esbuild.initialize({ wasmURL: `${import.meta.env.VITE_CDN_URL}/static/esbuild-wasm@0.20.2/esbuild.wasm` });
       setLoading(false);
       setTabs(items);
     } catch (error) {
