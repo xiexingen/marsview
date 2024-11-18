@@ -33,35 +33,7 @@
 
 4. 安装 `mysql` 安装方式自行百度
 
-5. 修改 `application.yml` 配置文件的 `eamil`、`redis`、`mybatis` 连接信息
-
-```java
-spring：
-  #邮箱配置
-  mail：
-    host：smtp地址，例如：smtp.qq.com
-    username：demo@qq.com（换成自己的邮箱）
-    password：yitmkgakdggbbceg（qq邮箱开启服务生成的密文，注意不是qq密码）
-  # redis配置
-  data：
-    redis：
-      host: XXXX
-      port: XXXX
-      password: XXXX
-      database: XXXX
-
-#mybatis配置
-mybatis：
-  jdbc：
-    url：XXXX
-    username: XXXX
-    password: XXXX
-
-```
-
-6. 运行 com.xintr.LowcodeApplication 启动服务
-
-> 注意，邮箱必须是自己的 163 邮箱，并且开启 POP3 服务，否则无法发送验证码
+详细文档请参考：[Java 启动和部署文档](https://github.com/JackySoft/marsview-backend/blob/main/java/README.md)
 
 ### koa 版本启动：
 
@@ -121,8 +93,8 @@ const ZHIPU_AI_KEY = '';
 ```
 
 > 1. 上面的配置，对于必填的，都有备注。
-> 2. 邮箱必须是自己的 163 邮箱，并且开启 POP3 服务，否则无法发送验证码
-> 3. 第一次开启 POP3 服务，会得到一个授权码，需要把授权码填写在邮箱密码处，此时不能用邮箱密码。
+> 2. 邮箱必须是自己的 163 邮箱，并且开启 `POP3` 服务，否则无法发送验证码
+> 3. 第一次开启 `POP3` 服务，会得到一个授权码，需要把授权码填写在邮箱密码处，此时不能用邮箱密码。
 > 4. 后续邮箱注册会变更为企业邮箱。
 
 3. 安装依赖
@@ -146,7 +118,7 @@ yarn dev
 
 ## 前端编辑器启动
 
-前端是一个`monorepo`仓库，因此必须使用`pnpm`启动。里面包含三个项目，分别是编辑器(editor)、访问端(admin)和文档(docs)。
+前端是一个`monorepo`仓库，因此必须使用`pnpm`启动。里面包含三个项目，分别是编辑器(`editor`)、访问端(`admin`)和文档(`docs`)。
 
 1. 安装依赖
 
@@ -191,13 +163,18 @@ http://127.0.0.1:8080
 
 启动后，即可在浏览器访问`Marsview`编辑器项目。
 
+**注意：**
+此时本地访问的项目地址是`admin.marsview.cc`，如果想要跳转到本地，需要修改`packages/editor/.env.development`文件中的`VITE_ADMIN_URL`，改为用户端启动后的地址。
+
+线上部署时，同样需要修改`packages/editor/.env.production`文件中的`VITE_ADMIN_URL`。
+
 ## 前端用户端启动
 
 用户端主要用来访问搭建好的项目或者页面，但前提是页面必须已经发布到对应的环境中。
 
 1. 修改接口配置
 
-打开 marsview/packages/editor/vite.config.ts，修改 proxy 中的 target 为本地后端接口地址
+打开 `marsview/packages/admin/vite.config.ts`，修改 `proxy` 中的 `target` 为本地后端接口地址
 
 ```
 proxy: {
@@ -222,6 +199,24 @@ pnpm start:admin
 
 http://127.0.0.1:8090
 
+**注意：**
+此时本地访问的项目地址是`admin.marsview.cc`，如果想要跳转到本地，需要修改`packages/admin/.env.development`文件中的`VITE_ADMIN_URL`，改为用户端启动后的地址。
+
+线上部署时，同样需要修改`packages/admin/.env.production`文件中的`VITE_ADMIN_URL`。
+
 ## 总结
 
-以上是本地部署和启动的过程，由于项目依赖百度云`OSS`和`CDN`，所以没有百度云的同学，可能会导致图片云服务和自定义组件功能不可用。
+1. 以上是本地部署和启动的过程，由于项目依赖百度云`OSS`和`CDN`，所以没有百度云的同学，可能会导致图片云服务和自定义组件功能不可用。
+
+2. `Java` 版本支持阿里云配置，`Koa`版本只支持百度云配置。
+
+3. 本地部署时需要关注`.env.development`文件配置。
+
+4. 线上部署需要关注`.env.production`文件配置，同时线上`nginx`需要添加反向代理。
+
+```shell
+# 通过反向代理可以解决跨域问题。
+location ^~/api {
+  proxy_pass http://106.xx.xx.xx:9001;
+}
+```

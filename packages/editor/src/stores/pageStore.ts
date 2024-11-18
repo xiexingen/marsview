@@ -20,16 +20,14 @@ export interface PageState {
     pageId: number;
     pageName: string;
     remark: string;
-    is_public: number;
-    is_edit: number;
-    stg_state: 1 | 2 | 3 | 4; // 1:未保存 2:已保存 3:已发布 4:已回滚
-    pre_state: 1 | 2 | 3 | 4; // 1:未保存 2:已保存 3:已发布 4:已回滚
-    prd_state: 1 | 2 | 3 | 4; // 1:未保存 2:已保存 3:已发布 4:已回滚
-    stg_publish_id: number;
-    pre_publish_id: number;
-    prd_publish_id: number;
-    preview_img: string;
-    user_id: string;
+    stgState: 1 | 2 | 3 | 4; // 1:未保存 2:已保存 3:已发布 4:已回滚
+    preState: 1 | 2 | 3 | 4; // 1:未保存 2:已保存 3:已发布 4:已回滚
+    prdState: 1 | 2 | 3 | 4; // 1:未保存 2:已保存 3:已发布 4:已回滚
+    stgPublishId: number;
+    prePublishId: number;
+    prdPublishId: number;
+    previewImg: string;
+    userId: string;
     // 页面配置数据
     config: {
       props: any;
@@ -107,16 +105,14 @@ export const usePageStore = create<PageState & PageAction>((set) => ({
     pageId: 0,
     pageName: '',
     remark: '',
-    is_public: 1,
-    is_edit: 1,
-    stg_state: 1,
-    pre_state: 1,
-    prd_state: 1,
-    stg_publish_id: 0,
-    pre_publish_id: 0,
-    prd_publish_id: 0,
-    preview_img: '',
-    user_id: '',
+    stgState: 1,
+    preState: 1,
+    prdState: 1,
+    stgPublishId: 0,
+    prePublishId: 0,
+    prdPublishId: 0,
+    previewImg: '',
+    userId: '',
     config: {
       props: {},
       style: {},
@@ -178,9 +174,9 @@ export const usePageStore = create<PageState & PageAction>((set) => ({
     set(
       produce((state) => {
         if (env === 'all') {
-          state.page.stg_state = 2;
-          state.page.pre_state = 2;
-          state.page.prd_state = 2;
+          state.page.stgState = 2;
+          state.page.preState = 2;
+          state.page.prdState = 2;
         } else {
           state.page[env] = pageState;
         }
@@ -528,10 +524,10 @@ export const usePageStore = create<PageState & PageAction>((set) => ({
           pageId: 0,
           pageName: '',
           remark: '',
-          stg_state: 1,
-          pre_state: 1,
-          prd_state: 1,
-          user_id: '',
+          stgState: 1,
+          preState: 1,
+          prdState: 1,
+          userId: '',
           config: {
             props: {},
             style: {},

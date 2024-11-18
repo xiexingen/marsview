@@ -356,7 +356,10 @@ const handleRequest = async ({ action, next }: ActionNode<ApiConfig>, data: any)
 const handleJumpLink = async ({ action, next }: ActionNode<JumpLinkAction>, data: any) => {
   const params = new URLSearchParams(data);
   if (action.jumpType === 'route') {
-    const url = `${action.url}${action.url.indexOf('?') > -1 ? '&' : '?'}${params}`;
+    let url = action.url;
+    if (params) {
+      url += action.url.indexOf('?') > -1 ? '&' : '?' + params;
+    }
     router.navigate(url);
   } else if (action.jumpType === 'micro') {
     if (!window.microApp) {
@@ -474,7 +477,7 @@ const handleDisable = async (
  * 发送飞书消息
  */
 const handleSendMessage = async (
-  { action, next }: ActionNode<{ msg_type: string; content: string; template_id: string; receive_id: number }>,
+  { action, next }: ActionNode<{ msgType: string; content: string; templateId: string; receiveId: number }>,
   data: any,
 ) => {
   const res = await request.post(`${import.meta.env.VITE_BASE_API}/robot/sendMessage`, { ...action, variables: data });

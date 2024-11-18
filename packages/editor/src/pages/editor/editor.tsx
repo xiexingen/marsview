@@ -60,10 +60,10 @@ const Editor = () => {
     getPageDetail(parseInt(id)).then((res) => {
       let pageData: any = {};
       try {
-        pageData = JSON.parse(res.page_data || '{}');
+        pageData = JSON.parse(res.pageData || '{}');
       } catch (error) {
         console.error(error);
-        console.info('【json数据】', res.page_data);
+        console.info('【json数据】', res.pageData);
         message.error('页面数据格式错误，请检查');
       }
       savePageInfo({
@@ -73,16 +73,14 @@ const Editor = () => {
         pageId: res.id,
         pageName: res.name,
         remark: res.remark,
-        is_public: res.is_public,
-        is_edit: res.is_edit,
-        preview_img: res.preview_img,
-        stg_publish_id: res.stg_publish_id,
-        pre_publish_id: res.pre_publish_id,
-        prd_publish_id: res.prd_publish_id,
-        stg_state: res.stg_state,
-        pre_state: res.pre_state,
-        prd_state: res.prd_state,
-        user_id: res.user_id,
+        previewImg: res.previewImg,
+        stgPublishId: res.stgPublishId,
+        prePublishId: res.prePublishId,
+        prdPublishId: res.prdPublishId,
+        stgState: res.stgState,
+        preState: res.preState,
+        prdState: res.prdState,
+        userId: res.userId,
       });
       setLoaded(true);
     });

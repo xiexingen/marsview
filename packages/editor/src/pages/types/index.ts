@@ -14,6 +14,34 @@ export interface IModalPropData<T = any> {
 
 export interface ProjectCardItemProps {
   item: Project.ProjectItem;
-  isAuth: boolean;
+  type: number;
   getList: () => void;
+}
+
+/**
+ * 反馈
+ */
+export interface FeedbackItem {
+  id: number;
+  userId?: number;
+  title: string;
+  content: string;
+  isSolve: number;
+  isTop: number;
+  like?: number;
+  userAvatar: string;
+  createdAt: string;
+  nickName: string;
+  type: number;
+  images?: string;
+}
+
+export interface FeedbackCommentItem {
+  id: number;
+  userAvatar?: string;
+  nickName: string;
+  content: string;
+  createdAt: string;
+  feedbackId: number;
+  isTop?: number;
 }

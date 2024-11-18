@@ -25,11 +25,11 @@ export const router = [
     children: [
       {
         path: '/projects',
-        element: lazyLoad(React.lazy(() => import('@/pages/home/ProjectList'))),
+        element: lazyLoad(React.lazy(() => import('@/pages/home/project/Category'))),
       },
       {
-        path: '/pages',
-        element: lazyLoad(React.lazy(() => import('@/pages/home/PageList'))),
+        path: '/project/pages',
+        element: lazyLoad(React.lazy(() => import('@/pages/home/project/Pages'))),
       },
       {
         path: '/libs',
@@ -100,6 +100,18 @@ export const router = [
       {
         path: '/cloud',
         element: lazyLoad(React.lazy(() => import('@/pages/home/cloud/ImgCloud'))),
+      },
+      {
+        path: '/feedback',
+        element: lazyLoad(React.lazy(() => import('@/pages/feedback'))),
+      },
+      {
+        path: '/feedback/:id/detail',
+        element: lazyLoad(React.lazy(() => import('@/pages/feedback/IssueDetail'))),
+      },
+      {
+        path: '/feedback/post',
+        element: lazyLoad(React.lazy(() => import('@/pages/feedback/IssuePost'))),
       },
       {
         path: '*',

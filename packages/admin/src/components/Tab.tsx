@@ -32,18 +32,18 @@ function Tab() {
       setActiveKey('welcome');
       return;
     }
-    const page_id = getPageId(pageId, pageMap);
-    const menuItem = pageMap[Number(page_id)];
+    const id = getPageId(pageId, pageMap);
+    const menuItem = pageMap[Number(id)];
     if (!menuItem) return;
-    if (!tabsList.find((item) => item.key == pathname)) {
+    if (!tabsList.find((item) => item.key.includes(pathname))) {
       tabsList.push({
-        key: pathname,
+        key: pathname + location.search,
         label: menuItem.name,
         closable: true,
       });
     }
     setTabsList([...tabsList]);
-    setActiveKey(pathname);
+    setActiveKey(pathname + location.search);
   };
   // 删除页签
   const remove = (path: string) => {

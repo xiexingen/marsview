@@ -211,6 +211,11 @@ const components = [
         name: '表单项',
         type: 'FormItem',
       },
+      {
+        icon: '',
+        name: '颜色选择器',
+        type: 'ColorPicker',
+      },
     ],
   },
   {
@@ -376,6 +381,16 @@ const components = [
         icon: '',
         name: '二维码',
         type: 'QRCode',
+      },
+      {
+        icon: '',
+        name: '徽标',
+        type: 'Badge',
+      },
+      {
+        icon: '',
+        name: '缎带',
+        type: 'Ribbon',
       },
     ],
   },

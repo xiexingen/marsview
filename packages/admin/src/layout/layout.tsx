@@ -73,7 +73,7 @@ const AdminLayout = () => {
         if (!menus) return;
 
         // 如果没有页面路径，跳转到欢迎页
-        if (!/project\/\d+\/\d+/.test(pathname)) navigate(`/project/${projectId}/welcome`);
+        if (!/project\/\d+\/\w+/.test(pathname)) navigate(`/project/${projectId}/welcome`);
         const { menuTree, buttons, pageMap, menuMap } = arrayToTree(menus.list);
         storage.set('buttons', buttons);
         storage.set('pageMap', pageMap);
@@ -108,7 +108,7 @@ const AdminLayout = () => {
       locale={locale}
       theme={{
         token: {
-          colorPrimary: projectInfo.system_theme_color || '#1677ff',
+          colorPrimary: projectInfo.systemThemeColor || '#1677ff',
         },
         hashed: false,
       }}
