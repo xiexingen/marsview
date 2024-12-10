@@ -1,21 +1,34 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { Typography, Tag, Button, Space, List, Tabs, Input, Avatar, Pagination, Skeleton, Form } from 'antd';
-import { ShareAltOutlined, SearchOutlined } from '@ant-design/icons';
-import style from './index.module.less';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FeedbackItem } from '../types';
-import { getFeedbackList, queryFeedbackTotal } from '@/api';
+import { Typography, Tag, Button, Space, List, Tabs, Input, Avatar, Pagination, Skeleton, Form, Flex, Segmented } from 'antd';
+import { ShareAltOutlined, SearchOutlined } from '@ant-design/icons';
+import { useAntdTable } from 'ahooks';
+
+import api, { FeedbackItem } from '@/api/feedback';
 import RandomAvatar from './UserDefaultAvatar';
-import { debounce } from 'lodash-es';
+import style from './index.module.less';
 
 const { Title, Paragraph, Text } = Typography;
 
 const FeedbackIndex: React.FC = () => {
+  const [resolveTotal, setResolveTotal] = useState(0);
+  const [bugTotal, setBugTotal] = useState(0);
+  const [currentTab, setCurrentTab] = useState('0');
+  const [hasMore, setHasMore] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [form] = Form.useForm();
   const navigate = useNavigate();
-  const handleCardClick = (id: number) => {
+
+  // 打开反馈详情
+  const handleCardClick = (id: number, item: FeedbackItem) => {
+    if (currentTab === '4') {
+      window.open(item.issuelUrl);
+      return;
+    }
     navigate(`/feedback/${id}/detail`);
   };
 
+  // 去发布
   const handleNavigatePost = () => {
     navigate('/feedback/post');
   };
@@ -53,12 +66,11 @@ const FeedbackIndex: React.FC = () => {
 
   useEffect(() => {
     getFeedbackTotal();
-    getList(current, pageSize, type, keyword);
   }, []);
 
+  // 查询反馈总量
   const getFeedbackTotal = async () => {
-    const res = await queryFeedbackTotal();
-
+    const res = await api.queryFeedbackTotal();
     setResolveTotal(res.resolveCount);
     setBugTotal(res.bugCount);
   };
@@ -125,15 +137,15 @@ const FeedbackIndex: React.FC = () => {
     <div className={style.layout}>
       <div className={style.content}>
         <div className={style.header}>
-          <div className={style.headerContent}>
+          <Flex justify="space-between">
             <div className={style.headerLeft}>
               <Title level={2} className={style.title}>
                 问答专栏
               </Title>
               <Space className={style.tags}>
-                <Tag>用户声音</Tag>
-                <Tag>创新分享</Tag>
-                <Tag>反馈建议</Tag>
+                <Tag color="#2db7f5">用户声音</Tag>
+                <Tag color="#87d068">创新分享</Tag>
+                <Tag color="#f50">反馈建议</Tag>
               </Space>
               <Paragraph className={style.description}>无论是解惑、反馈，还是分享创新的火花，都在此得到珍视～</Paragraph>
             </div>
@@ -147,7 +159,7 @@ const FeedbackIndex: React.FC = () => {
                 <Text className={style.statLabel}>解决</Text>
               </div>
             </div>
-          </div>
+          </Flex>
           <Space className={style.headerActions}>
             <Button type="primary" className={style.followButton} onClick={handleNavigatePost}>
               + 发布

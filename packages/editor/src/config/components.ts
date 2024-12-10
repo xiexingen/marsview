@@ -93,6 +93,17 @@ const components = [
     ],
   },
   {
+    type: 'Navigation',
+    title: '导航',
+    data: [
+      {
+        icon: '',
+        name: '下拉菜单',
+        type: 'Dropdown',
+      },
+    ],
+  },
+  {
     type: 'FormItems',
     title: '表单录入',
     data: [
@@ -215,6 +226,11 @@ const components = [
         icon: '',
         name: '颜色选择器',
         type: 'ColorPicker',
+      },
+      {
+        icon: '',
+        name: '评分',
+        type: 'Rate',
       },
     ],
   },

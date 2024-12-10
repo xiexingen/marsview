@@ -1,71 +1,9 @@
 import request from '@/utils/request';
-import {
-  PageParams,
-  PageReqParams,
-  CreatePageParams,
-  PublishPageParams,
-  PublishListParams,
-  ProjectListParams,
-  ProjectCreateParams,
-  ProjectUpdateParams,
-  UserListParams,
-  UserCreateParams,
-  Menu,
-  Role,
-} from './types';
-
-// 获取页面列表
-export const getPageList = (params: PageParams) => {
-  return request.get('/page/list', params);
-};
-
-// 获取页面模板列表
-export const getPageTemplateList = (params: Omit<PageParams, 'type'>) => {
-  return request.get('/page/getPageTemplateList', params);
-};
-// 获取页面详情
-export const getPageDetail = (id: number) => {
-  return request.get(`/page/detail/${id}`);
-};
-
-// 复制页面数据
-export const copyPageData = (params: PageReqParams) => {
-  return request.post('/page/copy', params);
-};
-
-// 删除页面数据
-export const delPageData = (params: { id: number }) => {
-  return request.post('/page/delete', params);
-};
-
-// 创建页面数据
-export const createPageData = (params: CreatePageParams) => {
-  return request.post('/page/create', params);
-};
+import { ProjectListParams, ProjectCreateParams, ProjectUpdateParams, UserListParams, UserCreateParams, Menu, Role } from './types';
 
 // 图片上传
 export const uploadImg = (params: any) => {
   return request.post('/upload/files', params, { showError: false });
-};
-
-// 保存页面数据
-export const updatePageData = (params: any) => {
-  return request.post('/page/update', params);
-};
-
-// 发布
-export const publishPage = (params: PublishPageParams) => {
-  return request.post('/publish/create', params);
-};
-
-// 发布记录
-export const publishList = (params: PublishListParams) => {
-  return request.post('/publish/list', params);
-};
-
-// 页面回滚
-export const rollbackPage = (params: { pageId: number; env: string; lastPublishId: number }) => {
-  return request.post('/page/rollback', params);
 };
 
 // 获取项目列表
@@ -118,7 +56,7 @@ export const updateMenu = (params: Menu.EditParams) => {
   return request.post('/menu/update', params);
 };
 
-// 更新菜单
+// 复制菜单
 export const copyMenu = (params: { id: number }) => {
   return request.post('/menu/copy', params);
 };

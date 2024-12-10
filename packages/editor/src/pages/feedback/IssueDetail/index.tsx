@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react';
-import styles from './index.module.less';
-import { Image, Input, Avatar, Skeleton, Spin, Badge } from 'antd';
-import { CheckCircleFilled, CheckOutlined, CloseCircleOutlined, FrownOutlined, HeartOutlined, LikeOutlined, SendOutlined } from '@ant-design/icons';
-import { FeedbackCommentItem, FeedbackItem } from '@/pages/types';
 import { useParams } from 'react-router-dom';
-import { createFeedbackComment, getFeedbackComments, getFeedbackDetail } from '@/api';
+import { Image, Input, Avatar, Spin, Badge } from 'antd';
+import { CheckCircleFilled, FrownOutlined, SendOutlined } from '@ant-design/icons';
+import api, { FeedbackCommentItem, FeedbackItem } from '@/api/feedback';
 import RandomAvatar from '../UserDefaultAvatar';
 import { usePageStore } from '@/stores/pageStore';
 import { message } from '@/utils/AntdGlobal';
+import styles from './index.module.less';
 const { TextArea } = Input;
 
 const CommentCard = (props: { comment: FeedbackCommentItem }) => {
@@ -65,7 +64,7 @@ export default function IssueDetail() {
   }, [id]);
 
   const fetchFeedbackDetail = async (id: number) => {
-    const res = await getFeedbackDetail(id);
+    const res = await api.getFeedbackDetail(id);
     setItemDetail(res);
   };
 
@@ -75,7 +74,7 @@ export default function IssueDetail() {
 
   const fetchComments = async (pageNum: number) => {
     setLoading(true);
-    const { list, total } = await getFeedbackComments(Number(id), 12, pageNum);
+    const { list, total } = await api.getFeedbackComments(Number(id), 12, pageNum);
     setHasMore(comments.length + list.length < total);
     setComments((prevComments) => [...prevComments, ...list]);
     setTotal(total);
@@ -89,15 +88,15 @@ export default function IssueDetail() {
       message.info('请输入评论内容');
       return;
     }
-    if (replyContent.length > 60) {
-      message.info('评论内容不能超过60字符～');
+    if (replyContent.length > 150) {
+      message.info('评论内容不能超过150字符～');
       return;
     }
     const data = {
       feedbackId: itemDetail.id,
       content: replyContent,
     };
-    const res = await createFeedbackComment(data);
+    const res = await api.createFeedbackComment(data);
 
     setComments((prevComments) => [
       {
@@ -132,7 +131,7 @@ export default function IssueDetail() {
               {itemDetail.userAvatar ? (
                 <Avatar src={itemDetail.userAvatar} size={40} className={styles.avatar} />
               ) : (
-                <RandomAvatar size={40} className={styles.avatar} seed={itemDetail.userId + ''} />
+                <RandomAvatar size={40} className={styles.avatar} seed={itemDetail.nickName + ''} />
               )}
             </div>
             <div>
@@ -186,14 +185,6 @@ export default function IssueDetail() {
             </div>
           </div>
         )}
-        {/* {
-          !itemDetail.isSolve? (
-            <div className={styles.statusChange}>
-                <div className={styles.statusChangeButton}>
-                  <CheckOutlined className={styles.statusChangeIcon} />
-                </div>
-            </div>) : null
-        } */}
       </div>
 
       {/* Comments Section */}
@@ -207,6 +198,7 @@ export default function IssueDetail() {
             onChange={(e) => setReplyContent(e.target.value)}
             placeholder="写下你的评论..."
             autoSize={{ minRows: 2, maxRows: 10 }}
+            maxLength={150}
           />
         </div>
         <div className={styles.action} onClick={handleReply}>

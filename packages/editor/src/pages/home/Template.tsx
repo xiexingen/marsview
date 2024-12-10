@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Input, Layout, Pagination, Spin } from 'antd';
 import { useMediaQuery } from 'react-responsive';
-import { getPageTemplateList } from '@/api';
+import api from '@/api/page';
 import PageCard from './project/components/PageCard';
 import styles from './index.module.less';
 
@@ -28,7 +28,7 @@ export default function Index() {
   const getList = async (pageNum: number = current, size: number = pageSize) => {
     setLoading(true);
     try {
-      const res = await getPageTemplateList({
+      const res = await api.getPageTemplateList({
         pageNum,
         pageSize: size,
         keyword,
@@ -65,7 +65,7 @@ export default function Index() {
           <>
             <div className={styles.pagesContent}>
               <Spin spinning={loading} size="large">
-                <PageCard list={content} getList={getList} />
+                <PageCard list={content} refresh={getList} />
               </Spin>
             </div>
             <Pagination

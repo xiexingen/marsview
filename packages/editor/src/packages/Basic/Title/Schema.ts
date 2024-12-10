@@ -91,7 +91,9 @@ export default {
       type: '',
       level: 1,
     },
-    style: {},
+    style: {
+      margin: 0,
+    },
     events: [],
     api: {},
     source: '',
@@ -99,7 +101,7 @@ export default {
   // 组件事件
   events: [
     {
-      value: 'handleClick',
+      value: 'onClick',
       name: '点击事件',
     },
   ],

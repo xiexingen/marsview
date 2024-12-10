@@ -4,13 +4,13 @@ import { Tooltip, Image, Card } from 'antd';
 import { UserOutlined, EyeOutlined, CopyOutlined, DeleteOutlined, SendOutlined, GlobalOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { message, Modal } from '@/utils/AntdGlobal';
-import { copyPageData, delPageData } from '@/api';
+import api from '@/api/page';
 import EnvTag from './EnvTag';
 import { PageItem } from '@/api/types';
 import styles from './../../index.module.less';
 
 // 页面列表项
-const PageCard = ({ list, getList }: { list: PageItem[]; getList: () => void }) => {
+const PageCard = ({ list, refresh }: { list: PageItem[]; refresh: () => void }) => {
   const [showPreview, setShowPreview] = useState(false);
   const [previewUrl, setPreviewUrl] = useState('');
   const navigate = useNavigate();
@@ -30,11 +30,11 @@ const PageCard = ({ list, getList }: { list: PageItem[]; getList: () => void }) 
       return navigate(`/editor/${params?.id}/edit`);
     }
     if (type === 'copy') {
-      await copyPageData({
+      await api.copyPageData({
         id: params.id,
       });
       message.success('复制成功');
-      getList();
+      refresh();
     }
     if (type === 'delete') {
       Modal.confirm({
@@ -44,11 +44,11 @@ const PageCard = ({ list, getList }: { list: PageItem[]; getList: () => void }) 
         okButtonProps: { danger: true },
         cancelText: '取消',
         onOk: async () => {
-          await delPageData({
+          await api.delPageData({
             id: params.id,
           });
           message.success('删除成功');
-          getList();
+          refresh();
         },
       });
     }
@@ -58,7 +58,7 @@ const PageCard = ({ list, getList }: { list: PageItem[]; getList: () => void }) 
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: `repeat(auto-fill, minmax(340px, 1fr))`,
+          gridTemplateColumns: `repeat(auto-fill, minmax(320px, 1fr))`,
           gap: 20,
         }}
       >

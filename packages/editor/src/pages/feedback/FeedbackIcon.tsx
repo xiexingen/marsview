@@ -10,7 +10,7 @@ const FeedbackIcon: React.FC = () => {
     navigate('/feedback');
   };
 
-  const hiddlenPages = ['/feedback', '/editor'];
+  const hiddlenPages = ['/feedback', '/editor', '/user'];
 
   const isFeedbackPage = hiddlenPages.some((page) => location.pathname.startsWith(page));
 
