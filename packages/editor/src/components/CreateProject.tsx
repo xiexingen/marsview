@@ -52,7 +52,7 @@ const CreateProject = (props: { update: () => void }, ref: any) => {
       okText="确定"
       cancelText="取消"
     >
-      <Form form={form} labelCol={{ span: 5 }} wrapperCol={{ span: 16 }} initialValues={{ logo: 'https://marsview.cdn.bcebos.com/mars-logo.png' }}>
+      <Form form={form} labelCol={{ span: 5 }} wrapperCol={{ span: 16 }} initialValues={{ logo: `${import.meta.env.VITE_CDN_URL}/mars-logo.png` }}>
         <Form.Item label="名称" name="name" rules={[{ required: true, message: '请输入页面名称' }]}>
           <Input placeholder="请输入项目名称" maxLength={15} showCount />
         </Form.Item>

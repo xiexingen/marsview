@@ -110,10 +110,10 @@ const Config: React.FC = memo(() => {
         <Form.Item label="系统布局" name="layout">
           <Radio.Group {...props} onChange={(event) => form.setFieldValue('menuMode', event.target.value === 1 ? 'inline' : 'horizontal')}>
             <Radio value={1}>
-              <img style={{ width: 100 }} src="https://imgcloud.cdn.bcebos.com/f35323e9a2625a85909cb6f3c.png" alt="左右布局" />
+              <img style={{ width: 100 }} src="/left-right.png" alt="左右布局" />
             </Radio>
             <Radio value={2}>
-              <img style={{ width: 100 }} src="https://imgcloud.cdn.bcebos.com/f35323e9a2625a85909cb6f3d.png" alt="上左右下布局" />
+              <img style={{ width: 100 }} src="/top-bottom.png" alt="上左右下布局" />
             </Radio>
           </Radio.Group>
         </Form.Item>

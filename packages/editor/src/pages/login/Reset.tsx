@@ -54,7 +54,7 @@ export default function Login() {
   return (
     <div className={style.resetContainer}>
       <div className={style.header} onClick={() => navigate('/login')}>
-        <img src="/imgs/mars-logo.png" width={45} />
+        <img src={`${import.meta.env.VITE_CDN_URL}/mars-logo.png`} width={45} />
         <span>Marsview</span>
       </div>
       <div className={style.content}>

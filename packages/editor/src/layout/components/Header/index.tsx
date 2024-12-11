@@ -213,7 +213,7 @@ const Header = memo(() => {
     <>
       <Layout.Header className={styles.layoutHeader}>
         <div className={styles.logo} onClick={goHome}>
-          <img src={`${theme === 'dark' ? '/imgs/mars-logo-dark.png' : '/imgs/mars-logo.png'}`} width={42} />
+          <img src={`${theme === 'dark' ? '/imgs/mars-logo-dark.png' : `${import.meta.env.VITE_CDN_URL}/mars-logo.png`}`} width={42} />
           <span>Marsview</span>
         </div>
         {/* 首页 - 导航菜单 */}

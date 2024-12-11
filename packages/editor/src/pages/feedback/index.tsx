@@ -61,9 +61,6 @@ const FeedbackIndex: React.FC = () => {
   const [keyword, setKeyword] = useState<string>('');
   const [list, setList] = useState<FeedbackItem[]>([]);
 
-  const [resolveTotal, setResolveTotal] = useState<number>(0);
-  const [bugTotal, setBugTotal] = useState<number>(0);
-
   useEffect(() => {
     getFeedbackTotal();
   }, []);
