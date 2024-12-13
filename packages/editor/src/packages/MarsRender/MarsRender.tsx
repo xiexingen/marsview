@@ -8,6 +8,7 @@ import { produce } from 'immer';
 import dayjs from 'dayjs';
 import * as antd from 'antd';
 import * as Plots from '@ant-design/plots';
+import * as icons from '@ant-design/icons';
 import { isNull, loadStyle, renderFormula } from '@/packages/utils/util';
 import { omit } from 'lodash-es';
 import { getComponent } from '@/packages/index';
@@ -37,10 +38,10 @@ export const Material = memo(({ item }: { item: ComItemType }) => {
 
   const { elementsMap, variableData, formData, updateToolbar } = usePageStore(
     useShallow((state) => ({
-      elementsMap: state.page.elementsMap,
-      variables: state.page.variables,
-      variableData: state.page.variableData,
-      formData: state.page.formData,
+      elementsMap: state.page.pageData.elementsMap,
+      variables: state.page.pageData.variables,
+      variableData: state.page.pageData.variableData,
+      formData: state.page.pageData.formData,
       updateToolbar: state.updateToolbar,
     })),
   );
@@ -50,9 +51,11 @@ export const Material = memo(({ item }: { item: ComItemType }) => {
     window.dayjs = window.dayjs || dayjs;
     window.antd = window.antd || antd;
     window.Plots = window.Plots || Plots;
+    window.icons = window.icons || icons;
   }
 
   useEffect(() => {
+    if (Object.keys(elementsMap).length === 0) return;
     if (elementsMap[item.id].remoteUrl) {
       initContext();
       loadStyle(item.type, elementsMap[item.id].remoteCssUrl as string);
@@ -71,6 +74,7 @@ export const Material = memo(({ item }: { item: ComItemType }) => {
   }, []);
 
   useEffect(() => {
+    if (Object.keys(elementsMap).length === 0) return;
     setConfig(() => {
       return produce(elementsMap[item.id].config, (draft: ConfigType) => {
         handleFormRegExp(draft);

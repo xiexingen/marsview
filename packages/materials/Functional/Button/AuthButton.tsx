@@ -1,7 +1,8 @@
+import { useEffect, useState } from 'react';
 import { Button } from 'antd';
 import storage from '@materials/utils/storage';
-import { useParams } from 'react-router-dom';
-import { renderFormula } from '@materials/utils/util';
+import { useLocation, useParams } from 'react-router-dom';
+import { renderFormula, getPageId } from '@materials/utils/util';
 
 const renderBtn = (props: any) => (
   <Button {...props} onClick={props.onClick}>

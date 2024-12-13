@@ -1,11 +1,12 @@
 import { memo } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Button, Form, Input, Space, Segmented, Tooltip } from 'antd';
 import { PlusOutlined, RedoOutlined, BarsOutlined, AppstoreOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import styles from './index.module.less';
 
 const SearchBar = (props: any) => {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
   const { form, from, submit, refresh, onCreate } = props;
 
   return (
@@ -25,18 +26,9 @@ const SearchBar = (props: any) => {
         </Form>
       </div>
       <Space>
-        {pathname === '/projects' && (
-          <Segmented
-            onChange={(value) => props.onViewChange(value)}
-            options={[
-              { value: 'project', icon: <AppstoreOutlined />, label: '项目' },
-              { value: 'page', icon: <BarsOutlined />, label: '页面' },
-            ]}
-          />
-        )}
         {pathname === '/project/pages' && (
           <Tooltip title="返回">
-            <Button icon={<ArrowLeftOutlined />} shape="circle" onClick={() => history.back()}></Button>
+            <Button icon={<ArrowLeftOutlined />} shape="circle" onClick={() => navigate('/projects')}></Button>
           </Tooltip>
         )}
         <Button type="dashed" icon={<PlusOutlined />} onClick={onCreate}>

@@ -1,5 +1,5 @@
 import React, { forwardRef, memo, useCallback, useMemo, useEffect, useImperativeHandle, useState } from 'react';
-import { Button, Table, Image, Tag, TablePaginationConfig, Tooltip, Typography, Badge, Popover } from 'antd';
+import { Button, Table, Image, Tag, TablePaginationConfig, Tooltip, Typography, Badge, Popover, Space } from 'antd';
 import { pickBy } from 'lodash-es';
 import * as icons from '@ant-design/icons';
 import MarsRender from '@materials/MarsRender/MarsRender';
@@ -8,11 +8,11 @@ import { handleActionFlow } from '@materials/utils/action';
 import * as util from '@materials/utils/util';
 import { usePageStore } from '@materials/stores/pageStore';
 import { ComponentType } from '@materials/types';
-import AuthButton, { genAuthButton } from '@materials/Functional/Button/AuthButton';
+import AuthButton from '@materials/Functional/Button/AuthButton';
 import { get } from 'lodash-es';
-import styles from './index.module.less';
 import { isNumber } from 'lodash-es';
 import { EllipsisOutlined } from '@ant-design/icons';
+import styles from './index.module.less';
 
 export interface IConfig {
   bordered: boolean;
@@ -58,7 +58,7 @@ const MarsTable = ({ config, elements, onCheckedChange }: ComponentType<IConfig>
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [visible, setVisible] = useState(true);
 
-  const variableData = usePageStore((state) => state.page.variableData);
+  const variableData = usePageStore((state) => state.page.pageData.variableData);
 
   useEffect(() => {
     const params = {
@@ -194,119 +194,120 @@ const MarsTable = ({ config, elements, onCheckedChange }: ComponentType<IConfig>
           },
           render(text: any, record: any, index: number) {
             let txt = text;
-            if (!util.isNotEmpty(txt)) {
-              if (typeof item.empty === 'undefined') {
-                txt = '-';
-              } else if (item.empty) {
-                txt = item.empty;
-              }
-            } else if (item.type === 'money') txt = util.formatNumber(text, 'currency');
-            else if (item.type === 'number') txt = util.formatNumber(text);
-            else if (item.type === 'date1') txt = util.formatDate(text, 'YYYY-MM-DD');
-            else if (item.type === 'date2') txt = util.formatDate(text);
+            try {
+              if (!util.isNotEmpty(txt)) {
+                if (typeof item.empty === 'undefined') {
+                  txt = '-';
+                } else if (item.empty) {
+                  txt = item.empty;
+                }
+              } else if (item.type === 'money') txt = util.formatNumber(text, 'currency');
+              else if (item.type === 'number') txt = util.formatNumber(text);
+              else if (item.type === 'date1') txt = util.formatDate(text, 'YYYY-MM-DD');
+              else if (item.type === 'date2') txt = util.formatDate(text);
 
-            // 文本处理完后，如果存在render，则执行render
-            if (item.render) {
-              try {
-                const renderFn = new Function('text', 'record', 'index', `return (${item.render})(text,record,index);`);
-                txt = renderFn(txt, record, index);
-              } catch (error) {
-                console.error(`列[${item.title}]渲染失败`, error);
-                txt = '解析异常';
+              // 文本处理完后，如果存在render，则执行render
+              if (item.render) {
+                try {
+                  const renderFn = new Function('text', 'record', 'index', `return (${item.render})(text,record,index);`);
+                  txt = renderFn(txt, record, index);
+                } catch (error) {
+                  console.error(`列[${item.title}]渲染失败`, error);
+                  txt = '解析异常';
+                }
               }
-            }
-            if (item.type === 'text') {
-              // 提取公共组件
-              const ButtonComp = (
-                <Button type="link" onClick={() => handleActionClick(item.eventName, record)}>
-                  {txt.toString()}
-                </Button>
-              );
-              // 超出省略、可复制、可点击
-              if (item.ellipsis && item.copyable) {
-                return (
-                  <Tooltip title={txt}>
-                    <Typography.Paragraph copyable style={{ marginBottom: 0 }}>
-                      {item.clickable ? ButtonComp : txt.toString()}
-                    </Typography.Paragraph>
-                  </Tooltip>
+              if (item.type === 'text') {
+                // 提取公共组件
+                const ButtonComp = (
+                  <Button type="link" onClick={() => handleActionClick(item.eventName, record)}>
+                    {txt.toString()}
+                  </Button>
                 );
-              }
-              // 超出省略
-              if (item.ellipsis) return <Tooltip title={txt}>{item.clickable ? ButtonComp : txt.toString()}</Tooltip>;
-              // 可复制
-              if (item.copyable) {
-                return <Typography.Paragraph copyable>{item.clickable ? ButtonComp : txt.toString()}</Typography.Paragraph>;
-              }
-              return item.clickable ? (
-                <Button type="link" onClick={() => handleActionClick(item.eventName, record)}>
-                  {txt.toString()}
-                </Button>
-              ) : (
-                txt.toString()
-              );
-            }
-            if (item.type === 'multiline') {
-              if (Array.isArray(txt)) {
-                return txt.map((item, index) => {
+                // 超出省略、可复制、可点击
+                if (item.ellipsis && item.copyable) {
                   return (
-                    <div key={index}>
-                      <span>{item.label}</span>
-                      <span>{item.value}</span>
-                    </div>
+                    <Tooltip title={txt}>
+                      <Typography.Paragraph copyable style={{ marginBottom: 0 }}>
+                        {item.clickable ? ButtonComp : txt.toString()}
+                      </Typography.Paragraph>
+                    </Tooltip>
                   );
-                });
-              }
-              return txt.toString();
-            }
-            if (item.type === 'status') {
-              if (Array.isArray(txt)) {
-                return txt.map((item, index) => {
-                  return <Badge key={index} status={item.status} text={item.text} />;
-                });
-              }
-              if (typeof txt === 'object') {
-                return <Badge status={txt.status} text={txt.text} />;
-              }
-              return <Badge status="success" text={txt.toString()} />;
-            }
-            if (item.type === 'image') {
-              const { width, height } = item?.imageConfig || {};
-              if (Array.isArray(txt)) {
-                return (
-                  <Image.PreviewGroup items={txt}>
-                    <Image width={width} height={height} src={txt[0]} />
-                  </Image.PreviewGroup>
+                }
+                // 超出省略
+                if (item.ellipsis) return <Tooltip title={txt}>{item.clickable ? ButtonComp : txt.toString()}</Tooltip>;
+                // 可复制
+                if (item.copyable) {
+                  return <Typography.Paragraph copyable>{item.clickable ? ButtonComp : txt.toString()}</Typography.Paragraph>;
+                }
+                return item.clickable ? (
+                  <Button type="link" onClick={() => handleActionClick(item.eventName, record)}>
+                    {txt.toString()}
+                  </Button>
+                ) : (
+                  txt.toString()
                 );
               }
-              const adaptVal = (val: string) => (isNumber(Number(val)) ? Number(val) : val);
-              return (txt?.startsWith?.('http') && <Image src={txt} width={adaptVal(width)} height={adaptVal(height)} />) || txt;
-            }
-            if (item.type === 'tag') {
-              if (Array.isArray(txt)) {
-                return txt.map((tag, index) => {
-                  if (typeof tag === 'object') {
+              if (item.type === 'multiline') {
+                if (Array.isArray(txt)) {
+                  return txt.map((item, index) => {
                     return (
-                      <Tag key={index} color={tag.color}>
-                        {tag.label}
+                      <div key={index}>
+                        <span>{item.label}</span>
+                        <span>{item.value}</span>
+                      </div>
+                    );
+                  });
+                }
+                return txt.toString();
+              }
+              if (item.type === 'status') {
+                if (Array.isArray(txt)) {
+                  return txt.map((item, index) => {
+                    return <Badge key={index} status={item.status} text={item.text} />;
+                  });
+                }
+                if (typeof txt === 'object') {
+                  return <Badge status={txt.status} text={txt.text} />;
+                }
+                return <Badge status="success" text={txt.toString()} />;
+              }
+              if (item.type === 'image') {
+                const { width = 30, height = 30 } = item?.imageConfig || {};
+                if (Array.isArray(txt)) {
+                  const adaptVal = (val: string) => (isNumber(Number(val)) ? Number(val) : val);
+                  return (
+                    <Image.PreviewGroup items={txt}>
+                      <Image width={adaptVal(width)} height={adaptVal(height)} src={txt[0]} />
+                    </Image.PreviewGroup>
+                  );
+                }
+                const adaptVal = (val: string) => (isNumber(Number(val)) ? Number(val) : val);
+                return (txt?.startsWith?.('http') && <Image src={txt} width={adaptVal(width)} height={adaptVal(height)} />) || txt;
+              }
+              if (item.type === 'tag') {
+                if (Array.isArray(txt)) {
+                  return txt.map((tag, index) => {
+                    if (typeof tag === 'object') {
+                      return (
+                        <Tag key={index} color={tag.color}>
+                          {tag.label}
+                        </Tag>
+                      );
+                    }
+                    return (
+                      <Tag key={tag} color="green">
+                        {tag}
                       </Tag>
                     );
-                  }
-                  return (
-                    <Tag key={tag} color="green">
-                      {tag}
-                    </Tag>
-                  );
-                });
-              } else if (typeof txt === 'string' || typeof txt === 'number') {
-                return <Tag color="green">{txt}</Tag>;
+                  });
+                } else if (typeof txt === 'string' || typeof txt === 'number') {
+                  return <Tag color="green">{txt}</Tag>;
+                }
+                return txt?.toString();
               }
-              return txt?.toString();
-            }
-            if (item.type === 'action') {
-              const { moreActionIndex } = item;
-              const btns = item.list
-                ?.map((btn: any) => {
+              if (item.type === 'action') {
+                const { moreActionIndex } = item;
+                const btns = item.list?.map((btn: any) => {
                   let btnTxt = '';
                   if (typeof btn.text === 'string') {
                     btnTxt = btn.text;
@@ -322,42 +323,48 @@ const MarsTable = ({ config, elements, onCheckedChange }: ComponentType<IConfig>
                     }
                   }
                   if (btnTxt === '') return;
-                  return genAuthButton({
-                    key: btn.eventName,
-                    type: 'link',
-                    size: 'small',
-                    danger: btn.danger,
-                    onClick: () => handleActionClick(btn.eventName, record),
-                    authCode: btn.authCode,
-                    authScript: btn.authScript,
-                  });
-                })
-                // 过滤掉空按钮
-                .filter((i: any) => i);
-              // 配置了折叠功能，且存在需要折叠的按钮
-              if (moreActionIndex && btns.slice(moreActionIndex - 1).length) {
-                const content = (
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                    }}
-                  >
-                    {btns.slice(moreActionIndex - 1)}
-                  </div>
-                );
-                return (
-                  <div className={styles.action}>
-                    {btns.slice(0, moreActionIndex - 1)}
-                    <Popover trigger="click" content={content}>
-                      <EllipsisOutlined />
-                    </Popover>
-                  </div>
-                );
+                  return (
+                    <AuthButton
+                      key={btn.eventName}
+                      type="link"
+                      size="small"
+                      danger={btn.danger}
+                      onClick={() => handleActionClick(btn.eventName, record)}
+                      authCode={btn.authCode}
+                      authScript={btn.authScript}
+                    >
+                      {btnTxt}
+                    </AuthButton>
+                  );
+                });
+                // 配置了折叠功能，且存在需要折叠的按钮
+                if (moreActionIndex && btns.slice(moreActionIndex - 1).length) {
+                  const content = (
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                      }}
+                    >
+                      {btns.slice(moreActionIndex - 1)}
+                    </div>
+                  );
+                  return (
+                    <div className={styles.action}>
+                      {btns.slice(0, moreActionIndex - 1)}
+                      <Popover trigger="click" content={content}>
+                        <EllipsisOutlined />
+                      </Popover>
+                    </div>
+                  );
+                }
+                return <Space>{btns}</Space>;
               }
-              return <div className={styles.action}>{btns}</div>;
+              return txt;
+            } catch (error) {
+              console.error(`列[${item.title}]渲染失败`, error);
+              return config.props.empty || '-';
             }
-            return txt;
           },
         };
       }),

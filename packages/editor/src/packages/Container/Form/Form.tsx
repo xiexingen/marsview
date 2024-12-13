@@ -21,7 +21,7 @@ const MForm = ({ id, type, config, elements, onFinish, onChange }: ComponentType
   const { addChildElements, formData, setFormData } = usePageStore(
     useShallow((state) => ({
       addChildElements: state.addChildElements,
-      formData: state.page.formData,
+      formData: state.page.pageData.formData,
       setFormData: state.setFormData,
     })),
   );
@@ -131,7 +131,7 @@ const MForm = ({ id, type, config, elements, onFinish, onChange }: ComponentType
   }, []);
   return (
     visible && (
-      <FormContext.Provider value={{ initValues }}>
+      <FormContext.Provider value={{ form, initValues }}>
         <div ref={drop}>
           <Form
             form={form}

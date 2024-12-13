@@ -16,6 +16,7 @@ import VsEditor from '../VsEditor';
 import InputPx from './InputPx';
 import styles from './index.module.less';
 import { styled } from 'styled-components';
+
 // 修复contextmenu被裁剪显示不完整问题
 const StyleCodeEditor = styled.div`
   .suggest-widget {
@@ -35,11 +36,11 @@ const StyleConfig = () => {
     form.resetFields();
     // 填充页面样式
     if (!state.selectedElement) {
-      form.setFieldValue('scopeCss', state.page.config.scopeCss || '/* 请在此处添加样式*/\n.marsview{\n\n}');
-      form.setFieldValue('scopeStyle', state.page.config.scopeStyle);
+      form.setFieldValue('scopeCss', state.page.pageData.config.scopeCss || '/* 请在此处添加样式*/\n.marsview{\n\n}');
+      form.setFieldValue('scopeStyle', state.page.pageData.config.scopeStyle);
     } else {
       // 填充组件样式
-      const config = state.page.elementsMap[state.selectedElement.id]?.config || {};
+      const config = state.page.pageData.elementsMap[state.selectedElement.id]?.config || {};
       form.setFieldValue('scopeCss', config.scopeCss || '/* 请在此处添加样式*/\n.marsview{\n\n}');
       form.setFieldValue('scopeStyle', config.scopeStyle || config.style);
       // 无实际作用，主要用于触发组件更新

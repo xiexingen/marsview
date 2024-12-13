@@ -1,10 +1,9 @@
-import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import React, { memo } from 'react';
 import { Button, Form, FormInstance, Input, Select, Switch } from 'antd';
-import { memo } from 'react';
-import style from './index.module.less';
-import { iconsList } from '../IConSetting';
-import React from 'react';
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import * as icons from '@ant-design/icons';
+import { iconsList } from '../IConSetting';
+import style from './index.module.less';
 
 const formEnum = [
   {
@@ -59,7 +58,7 @@ const formEnum = [
   },
 ];
 
-export default memo(function DynamicItemSetting({ form, labelSpan, name }: { form: FormInstance; labelSpan?: number; name: string }) {
+export default memo(function DynamicItemSetting({ name }: { form: FormInstance; labelSpan?: number; name: string }) {
   return (
     <Form.List name={name}>
       {(fields, { add, remove }, { errors }) => (
